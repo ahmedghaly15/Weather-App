@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/modules/home_screen.dart';
+import 'package:provider/provider.dart';
+
+import '/modules/home_screen.dart';
+import '/providers/weather_provider.dart';
 
 void main() {
-  runApp(const WeatherApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => WeatherProvider(),
+      child: const WeatherApp(),
+    ),
+  );
 }
 
 class WeatherApp extends StatelessWidget {
@@ -10,9 +18,24 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      theme: ThemeData(
+        primarySwatch: Provider.of<WeatherProvider>(context).weatherData == null
+            ? Colors.blue
+            : Provider.of<WeatherProvider>(context).weatherData!.getThemeData(),
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      home: const HomeScreen(),
     );
   }
 }
